@@ -136,8 +136,8 @@ public class Things extends Size {
 
     static public boolean isMapCrash(Size tank) {
         //判断是否和固定物品碰撞
-        for(int i=0;i<9;i++) {
-            for(int j=0;j<11;j++){
+        for(int i=0;i<Config.UNIT_y;i++) {
+            for(int j=0;j<Config.UNIT_x;j++){
                 if(Config.map[i][j]==WALL_wall || Config.map[i][j]==WALL_steel || Config.map[i][j]==WALL_water) {
                     if(CollsionUtils.isCollsionWithRect(tank,j*Config.UNIT,i*Config.UNIT,Config.UNIT,Config.UNIT)){
                         return true;

@@ -8,6 +8,8 @@ import game.Config;
 
 public class MainWindow extends Window{
 
+	static public int fate1 = 2;
+	static public int fate2 = 2;
 	static ArrayList<Tank> tankList = new ArrayList<Tank>();
 	static Tank player1;
 	static Tank player2;
@@ -23,14 +25,14 @@ public class MainWindow extends Window{
 	@Override
 	protected void onCreate() {
 
-		player1 = new Tank(0,0,1,Things.TANK_player1);
-		player2 = new Tank(0,8,3,Things.TANK_player2);
+		player1 = new Tank(0,13,1,Things.TANK_player1);
+		player2 = new Tank(24,13,3,Things.TANK_player2);
 
 		tankList.add(player1);
 		tankList.add(player2);
 
-		for(int i=0;i<5;i++) {
-			tankList.add(new Tank(10,0+i,3,Things.TANK_enemy));
+		for(int i=0;i<24;i++) {
+			tankList.add(new Tank(0+i,0,3,Things.TANK_enemy));
 		}
 	}
 
@@ -153,8 +155,8 @@ public class MainWindow extends Window{
 			itank.drawing();
 		}
 
-		for(int i = 0;i<9;i++) {
-			for(int j=0;j<11;j++){
+		for(int i = 0;i<Config.UNIT_y;i++) {
+			for(int j=0;j<Config.UNIT_x;j++){
 				if(Config.map[i][j] == Things.WALL_water) {
 					Wall wall = new Wall(j*Config.UNIT,i*Config.UNIT,Config.map[i][j]);
 					wall.drawing();
@@ -175,8 +177,8 @@ public class MainWindow extends Window{
 			}
 		}
 
-		for(int i = 0;i<9;i++) {
-			for(int j=0;j<11;j++){
+		for(int i = 0;i<Config.UNIT_y;i++) {
+			for(int j=0;j<Config.UNIT_x;j++){
 				if(Config.map[i][j] != 0 && Config.map[i][j] != Things.WALL_water) {
 					Wall wall = new Wall(j*Config.UNIT,i*Config.UNIT,Config.map[i][j]);
 					wall.drawing();
@@ -239,8 +241,35 @@ public class MainWindow extends Window{
 		for(;tank_i>=0;tank_i--){
 			itank = tankList.get(tank_i);
 			if(CollsionUtils.isCollsionWithRect(bullet,itank)){
-				if(player1!=null&&itank.toString().equals(player1.toString()))player1=null;
-				if(player2!=null&&itank.toString().equals(player2.toString()))player2=null;
+				if(player1!=null&&itank.toString().equals(player1.toString()))
+				{
+					if(fate1<=0)
+					{
+						player1=null;
+					}
+					else
+					{
+						player1 = new Tank(0,13,1,Tank.TANK_player1);
+						tankList.add(player1);
+						fate1--;
+					}
+
+				}
+
+				if(player2!=null&&itank.toString().equals(player2.toString()))
+				{
+					if(fate2<=0)
+					{
+						player2=null;
+					}
+					else
+					{
+						player2 = new Tank(24,13,1,Tank.TANK_player2);
+						tankList.add(player2);
+						fate2--;
+					}
+				}
+
 				blast = itank.boom();
 				blastList.add(blast);
 				blast = bullet.boom();
@@ -250,8 +279,8 @@ public class MainWindow extends Window{
 			}
 		}
 
-		for(int i=0;i<9;i++) {
-			for(int j=0;j<11;j++){
+		for(int i=0;i<Config.UNIT_y;i++) {
+			for(int j=0;j<Config.UNIT_x;j++){
 				if(Config.map[i][j] == Things.WALL_wall || Config.map[i][j] == Things.WALL_steel) {
 					if(CollsionUtils.isCollsionWithRect(bullet,j*Config.UNIT,i*Config.UNIT,Config.UNIT,Config.UNIT)){
 						if(Config.map[i][j] == Things.WALL_wall) {
@@ -295,8 +324,8 @@ public class MainWindow extends Window{
 	}
 	//判断遇到墙2以及开枪1
 	public static int shotWall(Size tank){
-		for(int i=0;i<9;i++) {
-		for(int j=0;j<11;j++){
+		for(int i=0;i<Config.UNIT_y;i++) {
+		for(int j=0;j<Config.UNIT_x;j++){
 			if(
 							Config.map[i][j]==Things.WALL_steel ||
 							Config.map[i][j]==Things.WALL_wall
@@ -306,7 +335,7 @@ public class MainWindow extends Window{
 				){
 					if(
 							Config.map[i][j]==Things.WALL_wall &&
-							Config.getRandom(5)==2
+							Config.getRandom(10)==2
 					) {
 						return 1;
 					}
